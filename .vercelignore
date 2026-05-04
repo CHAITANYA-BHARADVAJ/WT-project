@@ -1,0 +1,11 @@
+backend/.venv
+frontend/node_modules
+frontend/dist
+backend/__pycache__
+backend/engine/__pycache__
+backend/models/__pycache__
+api/__pycache__
+backend/tesseract-setup.exe
+*.png
+*.pdf
+*.pyc

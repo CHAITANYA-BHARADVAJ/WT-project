@@ -3,13 +3,15 @@ import axios from 'axios'
 import FileUpload from './components/FileUpload'
 import Dashboard from './components/Dashboard'
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '')
+// 🔥 FIXED: Direct backend URL
+const API_URL = "https://wt-project-2wde.onrender.com"
 
 function App() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // ✅ FIXED upload handler
   const handleUpload = useCallback(async (file) => {
     setLoading(true)
     setError(null)
@@ -19,21 +21,23 @@ function App() {
     formData.append('file', file)
 
     try {
-      const response = await axios.post(`${API_URL}/api/upload`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 60000,
-      })
+      const response = await axios.post(
+        `${API_URL}/upload`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 60000,
+        }
+      )
 
-      if (response.data.success) {
-        setData(response.data.data)
-      } else {
-        setError(response.data.message || 'Failed to parse the result file.')
-      }
+      // ✅ Directly use response (no success wrapper)
+      setData(response.data)
+
     } catch (err) {
       if (err.response) {
         setError(err.response.data.detail || 'Server error occurred.')
       } else if (err.request) {
-        setError('Cannot connect to the server. Make sure the backend is running on port 8000.')
+        setError('Server is waking up (Render free tier). Try again in a few seconds.')
       } else {
         setError('An unexpected error occurred.')
       }
@@ -42,24 +46,9 @@ function App() {
     }
   }, [])
 
-  const handleExport = useCallback(async () => {
-    try {
-      const response = await axios.post(`${API_URL}/api/export`, null, {
-        responseType: 'blob',
-        timeout: 30000,
-      })
-
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', 'result_analysis_report.pdf')
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
-    } catch {
-      setError('Failed to generate report PDF.')
-    }
+  // ❌ Removed export (not supported in backend yet)
+  const handleExport = useCallback(() => {
+    setError("Export feature not available yet.")
   }, [])
 
   const handleReset = useCallback(() => {
@@ -104,7 +93,7 @@ function App() {
             <div className="spinner" />
             <p className="loading-text">Analyzing your results...</p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-              Extracting data, computing statistics, and preparing charts
+              Processing Excel file and extracting data
             </p>
           </div>
         ) : data ? (

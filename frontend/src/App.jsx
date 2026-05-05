@@ -3,7 +3,6 @@ import axios from 'axios'
 import FileUpload from './components/FileUpload'
 import Dashboard from './components/Dashboard'
 
-// 🔥 FIXED: Direct backend URL
 const API_URL = "https://wt-project-2wde.onrender.com"
 
 function App() {
@@ -11,7 +10,6 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // ✅ FIXED upload handler
   const handleUpload = useCallback(async (file) => {
     setLoading(true)
     setError(null)
@@ -30,7 +28,6 @@ function App() {
         }
       )
 
-      // ✅ Directly use response (no success wrapper)
       setData(response.data)
 
     } catch (err) {
@@ -46,9 +43,8 @@ function App() {
     }
   }, [])
 
-  // ❌ Removed export (not supported in backend yet)
   const handleExport = useCallback(() => {
-    setError("Export feature not available yet.")
+    window.print()
   }, [])
 
   const handleReset = useCallback(() => {
@@ -60,7 +56,7 @@ function App() {
     <>
       <div className="app-bg" />
 
-      <header className="app-header">
+      <header className="app-header no-print">
         <div className="header-inner">
           <div className="logo">
             <div className="logo-icon">RA</div>
@@ -68,15 +64,15 @@ function App() {
           </div>
           <span className="header-badge">
             <span className="pulse-dot" />
-            Stateless - Privacy First
+            Stateless · Privacy First
           </span>
         </div>
       </header>
 
       <main className="app-main">
         {error && (
-          <div className="error-banner animate-fade-in">
-            <span className="icon">!</span>
+          <div className="error-banner animate-fade-in no-print">
+            <span className="icon">⚠</span>
             <span>{error}</span>
             <button
               className="btn btn-danger"
@@ -93,7 +89,7 @@ function App() {
             <div className="spinner" />
             <p className="loading-text">Analyzing your results...</p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-              Processing Excel file and extracting data
+              Processing file and extracting data
             </p>
           </div>
         ) : data ? (
@@ -107,9 +103,9 @@ function App() {
         )}
       </main>
 
-      <footer className="app-footer">
+      <footer className="app-footer no-print">
         <p>
-          Built with FastAPI + React - all processing in memory - no data stored
+          Built with FastAPI + React · All processing in memory · No data stored
         </p>
       </footer>
     </>

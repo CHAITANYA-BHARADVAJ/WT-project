@@ -60,7 +60,7 @@ async def upload(file: UploadFile = File(...)):
         sgpa_col_index = None
 
         for col in range(len(df.columns)):
-            temp = pd.to_numeric(df[col], errors='coerce').dropna()
+            temp = pd.to_numeric(df.iloc[:, col], errors='coerce').dropna()
 
             # SGPA must be realistic
             if len(temp) > 10 and temp.max() <= 10:
@@ -96,7 +96,7 @@ async def upload(file: UploadFile = File(...)):
         subject_cols = []
 
         for col in range(sgpa_col_index):
-            temp = pd.to_numeric(df[col], errors='coerce').dropna()
+            temp = pd.to_numeric(df.iloc[:, col], errors='coerce').dropna()
 
             # GP columns usually 0–10
             if len(temp) > 20 and temp.max() <= 10:

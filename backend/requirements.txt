@@ -1,9 +1,5 @@
 fastapi
 uvicorn
-python-multipart
 pandas
 openpyxl
-matplotlib
-seaborn
-fpdf
-pillow
+python-multipart
